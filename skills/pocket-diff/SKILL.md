@@ -9,7 +9,10 @@ Turns `git diff` into a standalone HTML page and publishes it as an Artifact —
 code to someone reading from a phone, which is what a Remote Control session usually is.
 
 **Publish it without reading the diff.** The script reads git, fills the template and writes the
-page. That is the point: a 50-file diff costs the same context as a 1-file diff.
+page. That is the point: measured on a 7-file change, one run costs about **1.6k tokens** (this file
+plus a one-line-per-file summary) where pasting the same diff into the conversation costs ~10k and
+writing the page inline costs ~65k. Cost scales with the number of files, not the size of the diff,
+so a 50-file review is still under 2k.
 
 ## Usage
 

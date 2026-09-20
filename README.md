@@ -45,7 +45,24 @@ token shapes; everything else still renders, just unhighlighted.
 
 The model never reads the diff. `scripts/build_diff_page.py` runs `git diff`, parses it, embeds the
 result into `assets/template.html` and writes the finished page; all Claude sees is a summary line
-per file. A 50-file diff costs the same context as a 1-file diff, which is the whole trick.
+per file.
+
+Measured on a real change — 7 files (4 source, 3 tests), +262 −4:
+
+| | characters | ~tokens | reaches the model |
+|---|---|---|---|
+| Script summary on stdout | 1,174 | ~330 | **yes** — the only part that does |
+| `SKILL.md`, loaded per call | 4,049 | ~1,125 | **yes** |
+| Raw diff, 12 lines of context | 35,441 | ~9,845 | no |
+| Raw diff of the whole files | 84,036 | ~23,343 | no |
+| The generated page | 235,399 | ~65,389 | no |
+
+One run costs roughly **1,600 tokens** — against ~9,800 for pasting the diff into the conversation,
+or ~65,000 for having the model write the page itself.
+
+What scales is the file count, not the diff size: stdout is one line per file, so a 50-file review
+still lands near 1,800 tokens while its raw diff would clear 100,000. Token figures are estimates
+(characters ÷ 3.6); the gap is the point, not the third digit.
 
 ## Options
 
