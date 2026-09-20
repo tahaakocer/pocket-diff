@@ -383,7 +383,6 @@
     width: max-content;
     min-width: 100%;
     background: var(--surface);
-    scroll-margin-top: 190px;
   }
   .line .nums {
     position: sticky;
@@ -766,8 +765,19 @@
       state.at = index;
       const row = state.blocks[index];
       row.classList.add("target");
-      row.scrollIntoView({ behavior: "smooth", block: "center" });
+      scrollRowIntoView(row);
       updateNav();
+    }
+
+    // scrollIntoView cannot be trusted here: .code scrolls horizontally, and a box that scrolls on
+    // one axis counts as a scroll container on both — so the browser "scrolls" the row inside that
+    // box and the page never moves. Measure the sticky header and move the window instead.
+    function scrollRowIntoView(row) {
+      const bar = document.querySelector(".topbar");
+      const offset = (bar ? bar.getBoundingClientRect().height : 0) + 12;
+      const top = row.getBoundingClientRect().top + window.scrollY - offset;
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      window.scrollTo({ top: Math.max(0, top), behavior: reduce ? "auto" : "smooth" });
     }
 
     document.getElementById("next").addEventListener("click", () => goto(state.at + 1));
