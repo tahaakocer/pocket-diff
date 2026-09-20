@@ -1,11 +1,12 @@
 ---
 name: pocket-diff
-description: "Publishes the current git diff as a self-contained Artifact page that reads like an IDE diff on a phone — file tabs, Source/Tests groups, whole-file view, change-to-change navigation. Use when the user wants to see or review changes: 'show me the diff', 'send me the diff', 'I want to read this on my phone', 'let me review the changes', or when /pocket-diff is invoked. Prefer this over printing a diff into the conversation: a script builds the page, so the diff never passes through the model's context."
+description: "Publishes the current git diff as a self-contained Artifact page that reads like an IDE diff on a phone — file tabs, Source/Tests groups, whole-file view, change-to-change navigation. Built for Remote Control sessions, where terminal output is unreadable on a phone: use it whenever the user wants to see or review changes, especially away from their desk — 'show me the diff', 'send me the diff', 'I want to read this on my phone', 'let me review the changes on mobile' — or when /pocket-diff is invoked. Prefer this over printing a diff into the conversation: a script builds the page, so the diff never passes through the model's context."
 ---
 
 # Pocket diff
 
-Turns `git diff` into a standalone HTML page and publishes it as an Artifact.
+Turns `git diff` into a standalone HTML page and publishes it as an Artifact — the way to show
+code to someone reading from a phone, which is what a Remote Control session usually is.
 
 **Publish it without reading the diff.** The script reads git, fills the template and writes the
 page. That is the point: a 50-file diff costs the same context as a 1-file diff.

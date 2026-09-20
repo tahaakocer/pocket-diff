@@ -4,8 +4,13 @@ A Claude Code skill that turns `git diff` into a self-contained page you can act
 phone — file tabs, Source/Tests groups, whole-file view, and jump-to-next-change, published as a
 private Artifact link.
 
-It exists because reviewing a diff away from your desk is miserable: a terminal dump wraps into
-soup, and pasting the diff into chat burns context for nothing.
+It was built for **Remote Control sessions**: you are following a Claude Code run from your phone,
+the change is ready, and there is no good way to read it. Terminal output wraps into soup, a
+downloaded file arrives without line numbers or colour, and pasting the diff into the conversation
+burns context for nothing.
+
+The same link works from a desk — hand it to a reviewer who would rather not check out your branch,
+or read a change without opening an IDE.
 
 ## Install
 
