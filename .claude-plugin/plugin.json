@@ -1,0 +1,13 @@
+{
+  "name": "pocket-diff",
+  "description": "Publish the current git diff as a phone-friendly, IDE-style review page",
+  "version": "1.0.0",
+  "author": {
+    "name": "Taha Koçer",
+    "url": "https://github.com/tahaakocer"
+  },
+  "homepage": "https://github.com/tahaakocer/pocket-diff",
+  "repository": "https://github.com/tahaakocer/pocket-diff",
+  "license": "MIT",
+  "keywords": ["diff", "code-review", "mobile", "artifact"]
+}

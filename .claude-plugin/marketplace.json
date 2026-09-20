@@ -1,0 +1,22 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "tahaakocer-plugins",
+  "description": "Claude Code plugins by Taha Koçer",
+  "owner": {
+    "name": "Taha Koçer",
+    "url": "https://github.com/tahaakocer"
+  },
+  "plugins": [
+    {
+      "name": "pocket-diff",
+      "source": "./",
+      "description": "Publish the current git diff as a phone-friendly, IDE-style review page",
+      "author": {
+        "name": "Taha Koçer",
+        "url": "https://github.com/tahaakocer"
+      },
+      "category": "productivity",
+      "homepage": "https://github.com/tahaakocer/pocket-diff"
+    }
+  ]
+}

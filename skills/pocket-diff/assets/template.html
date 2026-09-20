@@ -1,0 +1,822 @@
+<title>__PAGE_TITLE__</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+  :root {
+    --ground: #eef1f6;
+    --surface: #ffffff;
+    --surface-2: #f6f8fb;
+    --border: #d7dee9;
+    --border-soft: #e6ebf3;
+    --text: #171c24;
+    --muted: #5d6878;
+    --faint: #8a94a4;
+    --accent: #1f5fc4;
+    --accent-soft: #e5edfb;
+
+    --add-bg: #e6f4ea;
+    --add-bg-strong: #cfe9d8;
+    --add-mark: #1d7a41;
+    --del-bg: #fcebeb;
+    --del-bg-strong: #f5d6d6;
+    --del-mark: #b3261e;
+
+    --syn-key: #7a3e9d;
+    --syn-type: #0f6e7b;
+    --syn-str: #97590d;
+    --syn-num: #97590d;
+    --syn-com: #6b7684;
+    --syn-ann: #b0551a;
+
+    --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --sans: "IBM Plex Sans", system-ui, -apple-system, Segoe UI, sans-serif;
+    --gut: 3.2rem;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #0d1117;
+      --surface: #141a22;
+      --surface-2: #1a212b;
+      --border: #28313e;
+      --border-soft: #202834;
+      --text: #dde4ee;
+      --muted: #97a1b2;
+      --faint: #6f7b88;
+      --accent: #6aa6ff;
+      --accent-soft: #16273f;
+
+      --add-bg: #13291d;
+      --add-bg-strong: #1d4029;
+      --add-mark: #4cc07a;
+      --del-bg: #331a1c;
+      --del-bg-strong: #4a2226;
+      --del-mark: #f07a76;
+
+      --syn-key: #c792ea;
+      --syn-type: #5fc9d8;
+      --syn-str: #e0b350;
+      --syn-num: #e0b350;
+      --syn-com: #7c8899;
+      --syn-ann: #ffa657;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground: #0d1117;
+    --surface: #141a22;
+    --surface-2: #1a212b;
+    --border: #28313e;
+    --border-soft: #202834;
+    --text: #dde4ee;
+    --muted: #97a1b2;
+    --faint: #6f7b88;
+    --accent: #6aa6ff;
+    --accent-soft: #16273f;
+
+    --add-bg: #13291d;
+    --add-bg-strong: #1d4029;
+    --add-mark: #4cc07a;
+    --del-bg: #331a1c;
+    --del-bg-strong: #4a2226;
+    --del-mark: #f07a76;
+
+    --syn-key: #c792ea;
+    --syn-type: #5fc9d8;
+    --syn-str: #e0b350;
+    --syn-num: #e0b350;
+    --syn-com: #7c8899;
+    --syn-ann: #ffa657;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* ---------- header ---------- */
+
+  .topbar {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 20;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 12px;
+    padding: 12px 16px 10px;
+  }
+
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-family: var(--mono);
+    width: 100%;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+
+  .tally {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    font-variant-numeric: tabular-nums;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .tally .plus { color: var(--add-mark); font-weight: 500; }
+  .tally .minus { color: var(--del-mark); font-weight: 500; }
+
+  /* ---------- group tabs ---------- */
+
+  .groups {
+    display: flex;
+    gap: 6px;
+    padding: 8px 16px 0;
+    border-top: 1px solid var(--border-soft);
+  }
+  .groupbtn {
+    appearance: none;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 4px 10px;
+    font-family: var(--sans);
+    font-size: 12.5px;
+    color: var(--muted);
+    cursor: pointer;
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+  }
+  .groupbtn .n {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    font-variant-numeric: tabular-nums;
+    color: var(--faint);
+  }
+  .groupbtn[aria-pressed="true"] {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    color: var(--accent);
+    font-weight: 500;
+  }
+  .groupbtn[aria-pressed="true"] .n { color: var(--accent); }
+  .groupbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+  /* ---------- file tabs ---------- */
+
+  .tabs {
+    display: flex;
+    gap: 2px;
+    overflow-x: auto;
+    padding: 0 10px;
+    scrollbar-width: none;
+    border-top: 1px solid var(--border-soft);
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+
+  .tab {
+    flex: 0 0 auto;
+    appearance: none;
+    background: none;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    padding: 9px 8px 7px;
+    color: var(--muted);
+    font-family: var(--sans);
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    text-align: left;
+  }
+  .tab .name { font-weight: 500; font-family: var(--mono); font-size: 12.5px; }
+  .tab .meta {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    font-variant-numeric: tabular-nums;
+    color: var(--faint);
+  }
+  .tab[aria-selected="true"] { color: var(--text); border-bottom-color: var(--accent); }
+  .tab[aria-selected="true"] .meta { color: var(--muted); }
+  .tab:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; border-radius: 4px; }
+
+  /* ---------- toolbar ---------- */
+
+  .toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 16px;
+    background: var(--surface-2);
+    border-top: 1px solid var(--border-soft);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .toolbar::-webkit-scrollbar { display: none; }
+
+  .chip {
+    appearance: none;
+    flex: 0 0 auto;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 5px 11px;
+    font-family: var(--sans);
+    font-size: 12.5px;
+    color: var(--muted);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .chip[aria-pressed="true"] {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    color: var(--accent);
+    font-weight: 500;
+  }
+  .chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+  .seg {
+    display: flex;
+    flex: 0 0 auto;
+    gap: 2px;
+    padding: 2px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+  }
+  .segbtn {
+    appearance: none;
+    border: 0;
+    background: none;
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-family: var(--sans);
+    font-size: 12.5px;
+    color: var(--muted);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .segbtn[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent); font-weight: 500; }
+  .segbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+  .nav {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 0 0 auto;
+  }
+  .nav button {
+    appearance: none;
+    width: 30px;
+    height: 30px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    border-radius: 8px;
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .nav button:disabled { opacity: 0.4; cursor: default; }
+  .nav button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .nav .count {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    font-variant-numeric: tabular-nums;
+    color: var(--faint);
+    min-width: 4.5ch;
+    text-align: center;
+  }
+
+  /* ---------- file body ---------- */
+
+  main { padding: 14px 12px 28px; }
+
+  .filecard {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .filehead {
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface-2);
+  }
+  .filehead .repo {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+  .filehead .file {
+    font-family: var(--mono);
+    font-size: 13.5px;
+    font-weight: 500;
+    margin-top: 2px;
+    overflow-wrap: anywhere;
+  }
+  .filehead .dir {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: var(--faint);
+    margin-top: 2px;
+    overflow-wrap: anywhere;
+  }
+
+  .hunk + .hunk { border-top: 1px solid var(--border); }
+
+  .hunkhead {
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+    padding: 6px 14px;
+    background: var(--accent-soft);
+    border-bottom: 1px solid var(--border-soft);
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--muted);
+    overflow-wrap: anywhere;
+  }
+  .hunkhead .range { color: var(--accent); font-weight: 500; white-space: nowrap; }
+
+  /* one horizontal scroller for the whole block, gutters pinned — as in an editor */
+  .code {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 1.62;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: thin;
+  }
+
+  .line {
+    display: grid;
+    grid-template-columns: var(--gut) 1.4ch max-content;
+    width: max-content;
+    min-width: 100%;
+    background: var(--surface);
+    scroll-margin-top: 190px;
+  }
+  .line .nums {
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    background: inherit;
+    display: flex;
+    gap: 0.5ch;
+    justify-content: flex-end;
+    padding: 0 0.7ch 0 0.4ch;
+    color: var(--faint);
+    font-size: 10.5px;
+    font-variant-numeric: tabular-nums;
+    user-select: none;
+    border-right: 1px solid var(--border-soft);
+    align-items: baseline;
+    line-height: inherit;
+  }
+  .line .nums span { min-width: 3ch; text-align: right; }
+  .line .sign {
+    position: sticky;
+    left: var(--gut);
+    z-index: 2;
+    background: inherit;
+    user-select: none;
+    text-align: center;
+    color: var(--faint);
+    font-weight: 700;
+  }
+  .line .src {
+    padding-right: 16px;
+    white-space: pre;
+    tab-size: 2;
+  }
+
+  .line.add { background: var(--add-bg); }
+  .line.add .sign { color: var(--add-mark); }
+  .line.add .nums { border-right-color: var(--add-bg-strong); }
+  .line.del { background: var(--del-bg); }
+  .line.del .sign { color: var(--del-mark); }
+  .line.del .nums { border-right-color: var(--del-bg-strong); }
+
+  .line.target .nums { box-shadow: inset 3px 0 0 var(--accent); }
+
+  .skip {
+    position: sticky;
+    left: 0;
+    padding: 3px 14px 3px calc(var(--gut) + 1.4ch);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--faint);
+    background: var(--surface-2);
+    border-block: 1px solid var(--border-soft);
+    user-select: none;
+  }
+
+  body.wrap .code { overflow-x: hidden; }
+  body.wrap .line { width: auto; min-width: 0; grid-template-columns: var(--gut) 1.4ch 1fr; }
+  body.wrap .line .src { white-space: pre-wrap; overflow-wrap: anywhere; }
+
+  /* ---------- syntax ---------- */
+
+  .k { color: var(--syn-key); }
+  .t { color: var(--syn-type); }
+  .s { color: var(--syn-str); }
+  .n { color: var(--syn-num); }
+  .c { color: var(--syn-com); font-style: italic; }
+  .a { color: var(--syn-ann); }
+
+  /* ---------- footer ---------- */
+
+  .empty {
+    margin: 0;
+    padding: 28px 16px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 13.5px;
+  }
+
+  footer {
+    padding: 16px 16px 8px;
+    color: var(--muted);
+    font-size: 12.5px;
+    line-height: 1.6;
+  }
+  footer strong { color: var(--text); font-weight: 600; }
+  footer code {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    background: var(--surface-2);
+    border: 1px solid var(--border-soft);
+    border-radius: 4px;
+    padding: 0 4px;
+  }
+
+  @media (min-width: 720px) {
+    body { font-size: 15.5px; }
+    .code { font-size: 13.5px; }
+    :root { --gut: 4.4rem; }
+    main { padding: 18px 20px 36px; }
+    .head, .toolbar { padding-inline: 20px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { scroll-behavior: auto !important; }
+  }
+</style>
+
+<div class="topbar">
+  <div class="head">
+    <div class="eyebrow" id="eyebrow"></div>
+    <h1 id="title"></h1>
+    <div class="tally" id="tally"></div>
+  </div>
+  <div class="groups" id="groups" role="group" aria-label="File groups" hidden></div>
+  <div class="tabs" id="tabs" role="tablist" aria-label="Changed files"></div>
+  <div class="toolbar">
+    <div class="seg" role="group" aria-label="View">
+      <button class="segbtn" type="button" data-mode="changes" aria-pressed="false">Changes</button>
+      <button class="segbtn" type="button" data-mode="context" aria-pressed="true">Context</button>
+      <button class="segbtn" type="button" data-mode="full" aria-pressed="false">Whole file</button>
+    </div>
+    <button class="chip" id="wrap" aria-pressed="false">Wrap lines</button>
+    <div class="nav">
+      <button id="prev" aria-label="Previous change">‹</button>
+      <span class="count" id="pos">–</span>
+      <button id="next" aria-label="Next change">›</button>
+    </div>
+  </div>
+</div>
+
+<main id="main"></main>
+
+<footer id="footer"></footer>
+
+<script type="application/json" id="diff-data">__DATA_JSON__</script>
+<script>
+  (function () {
+    const DATA = JSON.parse(document.getElementById("diff-data").textContent);
+    const META = DATA.meta || {};
+    const ALL = DATA.files || [];
+    const KEYWORDS = new Set([
+      "abstract","boolean","break","case","catch","class","continue","default","do","else","enum","extends",
+      "final","finally","for","if","implements","import","instanceof","int","interface","long","new","package",
+      "private","protected","public","return","static","super","switch","this","throw","throws","try","void",
+      "while","true","false","null","var","record","sealed","yield"
+    ]);
+    const TOKEN = /(\/\/[^\n]*)|(\/\*[\s\S]*?\*\/)|("(?:\\.|[^"\\])*")|(@[A-Za-z_][\w.]*)|(\b\d[\w.]*)|([A-Za-z_$][\w$]*)/g;
+
+    const esc = (str) => str.replace(/[&<>]/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[ch]));
+
+    function highlight(src) {
+      const trimmed = src.trim();
+      if (trimmed.startsWith("*") || trimmed.startsWith("/*") || trimmed.startsWith("//")) {
+        return '<span class="c">' + esc(src) + "</span>";
+      }
+      let out = "";
+      let last = 0;
+      let match;
+      TOKEN.lastIndex = 0;
+      while ((match = TOKEN.exec(src)) !== null) {
+        out += esc(src.slice(last, match.index));
+        const text = esc(match[0]);
+        if (match[1] || match[2]) out += '<span class="c">' + text + "</span>";
+        else if (match[3]) out += '<span class="s">' + text + "</span>";
+        else if (match[4]) out += '<span class="a">' + text + "</span>";
+        else if (match[5]) out += '<span class="n">' + text + "</span>";
+        else if (KEYWORDS.has(match[0])) out += '<span class="k">' + text + "</span>";
+        else if (/^[A-Z]/.test(match[0])) out += '<span class="t">' + text + "</span>";
+        else out += text;
+        last = match.index + match[0].length;
+      }
+      return out + esc(src.slice(last));
+    }
+
+    const state = { group: null, file: 0, wrap: false, mode: "context", blocks: [], at: -1 };
+
+    try {
+      const saved = JSON.parse(localStorage.getItem("pocket-diff") || "{}");
+      state.wrap = !!saved.wrap;
+      if (["changes", "context", "full"].includes(saved.mode)) state.mode = saved.mode;
+    } catch (err) {
+      /* private mode: defaults are fine */
+    }
+
+    function save() {
+      try {
+        localStorage.setItem("pocket-diff", JSON.stringify({ wrap: state.wrap, mode: state.mode }));
+      } catch (err) {
+        /* nothing to do */
+      }
+    }
+
+    // ---- header ----
+    document.getElementById("title").textContent = META.title || "Diff";
+    document.getElementById("eyebrow").textContent = META.eyebrow || "";
+    document.getElementById("footer").innerHTML = META.footer || "";
+
+    const added = ALL.reduce((sum, f) => sum + f.added, 0);
+    const removed = ALL.reduce((sum, f) => sum + f.removed, 0);
+    document.getElementById("tally").innerHTML =
+      ALL.length + " files · <span class='plus'>+" + added + "</span> <span class='minus'>−" + removed + "</span>";
+
+    // ---- groups (source / tests) ----
+    const GROUPS = (META.groups || []).filter((group) => ALL.some((file) => file.group === group.key));
+    state.group = GROUPS.length ? GROUPS[0].key : null;
+
+    const groupBar = document.getElementById("groups");
+    if (GROUPS.length > 1) {
+      groupBar.hidden = false;
+      GROUPS.forEach((group) => {
+        const button = document.createElement("button");
+        button.className = "groupbtn";
+        button.type = "button";
+        button.setAttribute("aria-pressed", String(group.key === state.group));
+        const count = ALL.filter((file) => file.group === group.key).length;
+        button.innerHTML = esc(group.label) + "<span class='n'>" + count + "</span>";
+        button.addEventListener("click", () => {
+          if (state.group === group.key) return;
+          state.group = group.key;
+          Array.from(groupBar.children).forEach((other, i) =>
+            other.setAttribute("aria-pressed", String(GROUPS[i].key === state.group)));
+          buildTabs();
+          select(0);
+        });
+        groupBar.appendChild(button);
+      });
+    }
+
+    // ---- file tabs ----
+    const tabs = document.getElementById("tabs");
+    const groupFiles = () => ALL.filter((file) => file.group === state.group);
+
+    function buildTabs() {
+      tabs.replaceChildren();
+      groupFiles().forEach((file, index) => {
+        const button = document.createElement("button");
+        button.className = "tab";
+        button.type = "button";
+        button.setAttribute("role", "tab");
+        button.setAttribute("aria-selected", String(index === 0));
+        button.innerHTML =
+          "<span class='name'>" + esc(file.path.split("/").pop()) + "</span>" +
+          "<span class='meta'>+" + file.added + " −" + file.removed + "</span>";
+        button.addEventListener("click", () => select(index));
+        tabs.appendChild(button);
+      });
+    }
+
+    function select(index) {
+      state.file = index;
+      Array.from(tabs.children).forEach((tab, i) => tab.setAttribute("aria-selected", String(i === index)));
+      if (tabs.children[index]) tabs.children[index].scrollIntoView({ block: "nearest", inline: "nearest" });
+      render();
+      window.scrollTo({ top: 0 });
+    }
+
+    // ---- rendering ----
+    function render() {
+      const file = groupFiles()[state.file];
+      if (!file) {
+        const empty = document.createElement("p");
+        empty.className = "empty";
+        empty.textContent = "No changes in this selection.";
+        document.getElementById("main").replaceChildren(empty);
+        state.blocks = [];
+        state.at = -1;
+        updateNav();
+        return;
+      }
+      const parts = file.path.split("/");
+      const name = parts.pop();
+      const card = document.createElement("div");
+      card.className = "filecard";
+
+      const head = document.createElement("div");
+      head.className = "filehead";
+      head.innerHTML =
+        "<div class='repo'>" + esc(file.repo) + "</div>" +
+        "<div class='file'>" + esc(name) + "</div>" +
+        "<div class='dir'>" + esc(parts.join("/")) + "</div>";
+      card.appendChild(head);
+
+      const hunks = state.mode === "full" ? (file.full || file.hunks) : file.hunks;
+      hunks.forEach((hunk) => {
+        const block = document.createElement("div");
+        block.className = "hunk";
+
+        const first = hunk.lines[0] || { o: 0, n: 0 };
+        const head2 = document.createElement("div");
+        head2.className = "hunkhead";
+        head2.innerHTML = state.mode === "full"
+          ? "<span class='range'>whole file</span><span>" + hunk.lines.length + " lines</span>"
+          : "<span class='range'>" + first.o + "–" + (first.o + hunk.lines.length) + "</span>" +
+            "<span>" + esc(hunk.context || "") + "</span>";
+        block.appendChild(head2);
+
+        const code = document.createElement("div");
+        code.className = "code";
+        const keep = visibility(hunk.lines);
+        let skipped = 0;
+
+        hunk.lines.forEach((line, i) => {
+          if (!keep[i]) {
+            skipped += 1;
+            return;
+          }
+          if (skipped > 0) {
+            const gap = document.createElement("div");
+            gap.className = "skip";
+            gap.textContent = "⋯ " + skipped + " lines hidden";
+            code.appendChild(gap);
+            skipped = 0;
+          }
+          const row = document.createElement("div");
+          row.className = "line " + (line.t === "a" ? "add" : line.t === "d" ? "del" : "ctx");
+          row.innerHTML =
+            "<span class='nums'><span>" + (line.o === null ? "" : line.o) + "</span>" +
+            "<span>" + (line.n === null ? "" : line.n) + "</span></span>" +
+            "<span class='sign'>" + (line.t === "a" ? "+" : line.t === "d" ? "−" : "") + "</span>" +
+            "<span class='src'>" + (line.s === "" ? "&nbsp;" : highlight(line.s)) + "</span>";
+          code.appendChild(row);
+        });
+
+        if (skipped > 0) {
+          const gap = document.createElement("div");
+          gap.className = "skip";
+          gap.textContent = "⋯ " + skipped + " lines hidden";
+          code.appendChild(gap);
+        }
+
+        block.appendChild(code);
+        card.appendChild(block);
+      });
+
+      const main = document.getElementById("main");
+      main.replaceChildren(card);
+
+      // change blocks for navigation
+      state.blocks = [];
+      let open = false;
+      main.querySelectorAll(".line").forEach((row) => {
+        const changed = row.classList.contains("add") || row.classList.contains("del");
+        if (changed && !open) {
+          state.blocks.push(row);
+          open = true;
+        } else if (!changed) {
+          open = false;
+        }
+      });
+      state.at = -1;
+      updateNav();
+    }
+
+    // context lines stay visible within two rows of a change when compact is on
+    function visibility(lines) {
+      if (state.mode !== "changes") return lines.map(() => true);
+      const near = lines.map((line) => line.t !== "c");
+      const keep = lines.map((line, i) => {
+        if (line.t !== "c") return true;
+        for (let d = 1; d <= 2; d += 1) {
+          if (near[i - d] || near[i + d]) return true;
+        }
+        return false;
+      });
+      return keep;
+    }
+
+    function updateNav() {
+      const total = state.blocks.length;
+      document.getElementById("pos").textContent =
+        total === 0 ? "–" : (state.at < 0 ? "0" : state.at + 1) + "/" + total;
+      document.getElementById("prev").disabled = total === 0 || state.at <= 0;
+      document.getElementById("next").disabled = total === 0 || state.at >= total - 1;
+    }
+
+    function goto(index) {
+      if (index < 0 || index >= state.blocks.length) return;
+      state.blocks.forEach((row) => row.classList.remove("target"));
+      state.at = index;
+      const row = state.blocks[index];
+      row.classList.add("target");
+      row.scrollIntoView({ behavior: "smooth", block: "center" });
+      updateNav();
+    }
+
+    document.getElementById("next").addEventListener("click", () => goto(state.at + 1));
+    document.getElementById("prev").addEventListener("click", () => goto(state.at - 1));
+
+    const wrapButton = document.getElementById("wrap");
+    const segButtons = Array.from(document.querySelectorAll(".segbtn"));
+
+    wrapButton.addEventListener("click", () => {
+      state.wrap = !state.wrap;
+      applyWrap();
+      save();
+    });
+
+    segButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        state.mode = button.dataset.mode;
+        applyMode();
+        render();
+        save();
+      });
+    });
+
+    function applyMode() {
+      segButtons.forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.mode === state.mode)));
+    }
+
+    function applyWrap() {
+      document.body.classList.toggle("wrap", state.wrap);
+      wrapButton.setAttribute("aria-pressed", String(state.wrap));
+    }
+
+    document.addEventListener("keydown", (event) => {
+      if (event.target instanceof HTMLButtonElement) return;
+      if (event.key === "ArrowRight" && state.file < groupFiles().length - 1) select(state.file + 1);
+      if (event.key === "ArrowLeft" && state.file > 0) select(state.file - 1);
+      if (event.key === "n") goto(state.at + 1);
+      if (event.key === "p") goto(state.at - 1);
+    });
+
+    if (META.full === false) {
+      const fullButton = document.querySelector('.segbtn[data-mode="full"]');
+      if (fullButton) fullButton.hidden = true;
+      if (state.mode === "full") state.mode = "context";
+    }
+
+    applyWrap();
+    applyMode();
+    buildTabs();
+    render();
+  })();
+</script>
