@@ -51,18 +51,19 @@ Measured on a real change — 7 files (4 source, 3 tests), +262 −4:
 
 | | characters | ~tokens | reaches the model |
 |---|---|---|---|
-| `SKILL.md`, loaded on every call | 4,049 | ~1,125 | **yes** |
-| Script summary on stdout | 1,174 | ~330 | **yes** |
+| `SKILL.md`, loaded on every call | 2,655 | ~740 | **yes** |
+| Script summary on stdout | 740 | ~205 | **yes** |
 | The tool calls around them (bash, publish) | — | ~700 | **yes** |
 | Raw diff, 12 lines of context | 35,441 | ~9,845 | no |
 | Raw diff of the whole files | 84,036 | ~23,343 | no |
 | The generated page | 235,399 | ~65,389 | no |
 
-One run costs roughly **2,100 tokens** — against ~9,800 for pasting the diff into the conversation,
+One run costs roughly **1,650 tokens** — against ~9,800 for pasting the diff into the conversation,
 or ~65,000 for having the model write the page itself.
 
-What scales is the file count, not the diff size: stdout is one line per file (~47 tokens), so a
-50-file review lands near 4,000 tokens while its raw diff would clear 100,000.
+What scales is the file count, not the diff size: the summary is one terse line per file
+(~29 tokens, no repeated package paths), so a 50-file review lands near 2,900 tokens while its raw
+diff would clear 100,000.
 
 The first three rows are what this skill actually spends; the last three are the size of what
 another approach would have put in front of the model. Token figures are estimates

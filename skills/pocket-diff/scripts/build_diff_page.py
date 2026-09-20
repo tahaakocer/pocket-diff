@@ -228,16 +228,19 @@ def main():
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(page, encoding="utf-8")
 
+    # The summary is the only part of this run that reaches the model, so it stays terse: no full
+    # paths (a Java package prefix repeats on every line and says nothing), no eyebrow echo.
     print("wrote %s (%.1f KB)" % (out, len(page.encode()) / 1024))
     print(
-        "%d files (%d source, %d test) · +%d -%d · whole-class view: %s"
-        % (len(files), len(files) - tests, tests, added, removed, "on" if full_on else "off")
+        "%d files (%d source, %d tests) · +%d -%d · whole-file view: %s · title: %s"
+        % (len(files), len(files) - tests, tests, added, removed, "on" if full_on else "off", title)
     )
-    print("title: %s | eyebrow: %s" % (title, eyebrow))
     for entry in files:
+        parts = entry["path"].split("/")
+        short = "/".join(parts[-2:])
         print(
-            "  [%s] %s/%s  +%d -%d"
-            % (entry["group"], entry["repo"], entry["path"], entry["added"], entry["removed"])
+            "  %s %s %s +%d -%d"
+            % (entry["group"], entry["repo"], short, entry["added"], entry["removed"])
         )
 
 
